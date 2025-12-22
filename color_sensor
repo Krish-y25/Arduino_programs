@@ -1,0 +1,52 @@
+//Full working Color sensor code
+#define s0 4
+#define s1 5
+#define s2 6
+#define s3 7
+#define out 8
+int red = 9, yellow = 10, green = 11;
+void setup() {
+  pinMode(s0, OUTPUT);
+  pinMode(s1, OUTPUT);
+  pinMode(s2, OUTPUT);
+  pinMode(s3, OUTPUT);
+  pinMode(out, INPUT);
+  pinMode(red, OUTPUT);
+  pinMode(yellow, OUTPUT);
+  pinMode(green, OUTPUT);
+  Serial.begin(9600);
+  digitalWrite(s0, HIGH);
+  digitalWrite(s1, LOW);
+}
+int read_color(int s2_state, int s3_state){
+  digitalWrite(s2, s2_state);
+  digitalWrite(s3, s3_state);
+  return pulseIn(out, LOW, 10000);
+}
+void loop() {
+  int redfr = read_color(LOW, LOW);
+  int bluefr = read_color(LOW, HIGH);
+  int greenfr = read_color(HIGH, HIGH);
+  Serial.print("Red: ");
+  Serial.print(redfr);
+  Serial.print("\tGreen: ");
+  Serial.print(greenfr);
+  Serial.print("\tBlue: ");
+  Serial.println(bluefr);
+  if(redfr < bluefr && redfr < greenfr){
+    digitalWrite(red, HIGH);
+    digitalWrite(green, LOW);
+    digitalWrite(yellow, LOW);
+  }
+  if(bluefr < redfr && bluefr < greenfr){
+    digitalWrite(yellow, HIGH);
+    digitalWrite(red, LOW);
+    digitalWrite(green, LOW);
+  }
+  if(greenfr < bluefr && greenfr < redfr){
+    digitalWrite(red, LOW);
+    digitalWrite(green, HIGH);
+    digitalWrite(yellow, LOW);
+  }
+  delay(1000);
+ }
